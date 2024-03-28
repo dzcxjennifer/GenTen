@@ -78,30 +78,15 @@ def run_exp(R,N,Corners,Reps):
             nonten_results[rep,7] = altmax_time
             
             
-        return np.mean(nonten_results[:,1]),np.std(nonten_results[:,1])/np.sqrt(reps), np.mean(nonten_results[:,7]),np.std(nonten_results[:,7])/np.sqrt(reps)
+        return np.mean(nonten_results[:,0]),np.std(nonten_results[:,0])/np.sqrt(reps),np.mean(nonten_results[:,1]),np.std(nonten_results[:,1])/np.sqrt(reps), np.mean(nonten_results[:,7]),np.std(nonten_results[:,7])/np.sqrt(reps)
     
-# # # p 
-# print('-------------P------------------')
-# Reps = [10] #same as neurips paper
-# Corners = [10] 
-# N = [10000]
-# results = np.zeros((5, 5)) 
-# for p in reversed(range(4,8)): #(4,9)
-#     R = [tuple(10  for _ in range(p))]
-#     res = run_exp(R,N,Corners,Reps)
-#     results[p-4,0]=p
-#     results[p-4,1] = res[0]
-#     results[p-4,2] = res[1]
-#     results[p-4,3] = res[2]
-#     results[p-4,4] = res[3]
-
-    
-    print('results',results)
-
-results = np.zeros((10, 5)) 
+results = np.zeros((5, 7)) 
 Corners = [10] 
-Reps = [10]
-for r_ in range(1,11):
+#for r_ in range(1,11):
+for r_ in [1,2,4,6,8]:
+    if r_ == 4:
+        Reps = [2]
+    else: Reps = [5]
     r = r_*10
     R = [(r,r,r)]
     N = [1000]
@@ -112,39 +97,6 @@ for r_ in range(1,11):
     results[r_-1,2] = res[1]
     results[r_-1,3] = res[2]
     results[r_-1,4] = res[3]
+    results[r_-1,5] = res[4]
+    results[r_-1,6] = res[5]
     print(results)
-
-
-#percent 1
-# print('-------------Percent 1------------------')
-# results = np.zeros((4, 5)) 
-# R = [(10,10,10,10,10,10)]
-# percent = [0.01,0.1,1,10]
-# for i in range(4): 
-#     N = [int(1000000*percent[i])]
-#     res = run_exp(R,N,Corners,Reps)
-
-#     results[i,0]=percent[i]
-#     results[i,1] = res[0]
-#     results[i,2] = res[1]
-#     results[i,3] = res[2]
-#     results[i,4] = res[3]
-#     print('results',results)
-# np.save(f'percent_1.npy', results)
-
-# #percent 2
-# print('-------------Percent 2------------------')
-# results = np.zeros((4, 5)) 
-# R = [(10,10,10,10,10,10,10)]
-# percent = [0.01,0.1,1,10]
-# for i in range(4): 
-#     N = [int(10000000*percent[i])]
-#     res = run_exp(R,N,Corners,Reps)
-
-#     results[i,0]=percent[i]
-#     results[i,1] = res[0]
-#     results[i,2] = res[1]
-#     results[i,3] = res[2]
-#     results[i,4] = res[3]
-#     print('results',results)
-# np.save(f'percent_2.npy', results)

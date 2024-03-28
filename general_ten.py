@@ -439,25 +439,26 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                     alt_start = time.time()
 
                     altmin_count = 0
-                    while (oflg and altmin_count < 100):  # abort altmin
-                        altmin_count += 1
-                        if (altmin_count == 1) & (out_count == 0):
-                            the_n = the.X
-                        elif (altmin_count == 2) & (out_count == 0):
-                            the_n = -1* the.X
-                        else:
-                            the_n = np.round(rng.uniform(size=np.sum(r)))
-                            the_n = 2*1.0*(the_n < 0.5) -1
-                        (psi_n, the_n, last_cmin) = altmin(r, lpar, p, tol, m._cmin, m._gap, c, the_n, Un)
-                        
-                        #print(m._cmin - last_cmin,m._gap)
-                        if (m._cmin - last_cmin > m._gap): # first case in the output of Weak Separation Oracle
-                            m._oracle = "AltMin"
-                            oflg = False
-                        elif (last_cmin < best_cmin):
-                            best_cmin = last_cmin
-                            psi_b = psi_n
-                            the_b = the_n                        
+                    #while (oflg and altmin_count < 100):  # abort altmin
+                    altmin_count += 1
+                    out_count += 1
+                    if (altmin_count == 1) & (out_count == 0):
+                        the_n = the.X
+                    elif (altmin_count == 2) & (out_count == 0):
+                        the_n = -1* the.X
+                    else:
+                        the_n = np.round(rng.uniform(size=np.sum(r)))
+                        the_n = 2*1.0*(the_n < 0.5) -1
+                    (psi_n, the_n, last_cmin) = altmin(r, lpar, p, tol, m._cmin, m._gap, c, the_n, Un)
+                    
+                    #print(m._cmin - last_cmin,m._gap)
+                    if (m._cmin - last_cmin > m._gap): # first case in the output of Weak Separation Oracle
+                        m._oracle = "AltMin"
+                        oflg = False
+                    elif (last_cmin < best_cmin):
+                        best_cmin = last_cmin
+                        psi_b = psi_n
+                        the_b = the_n                        
                     #print(best_cmin)
                     # improve the gap estimate when certain conditions hold
                     if oflg and m._cmin - best_cmin > (objVal - bestbd)/2:
@@ -466,8 +467,8 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                         the_n = the_b
                         m._oracle = "AltMin"
                         oflg = False
-                    else:
-                        out_count += 1
+                    # else:
+                    #     out_count += 1
                     alt_end = time.process_time()
                     alt_end = time.time()
                     alt_time = alt_end - alt_start

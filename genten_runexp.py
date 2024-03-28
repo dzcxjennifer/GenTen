@@ -14,10 +14,10 @@ from pyten.tools import tenerror
 ##################################################################
 # EDIT THESE TO CHANGE PROBLEM SETUP
 # Problem parameters
-R = [(1,1,1)]
-N = [500]
+R = [(10,10,10)]
+N = [1000]
 Corners = [10]
-Reps = [1]
+Reps = [10]
 ##################################################################
 
 for i in range(len(R)):
@@ -32,8 +32,8 @@ for i in range(len(R)):
     cum_r = np.insert(np.cumsum(r), 0, 0)
 
     
-    nonten_results = np.zeros((reps, 7)) 
-    np.save(f'experiments/record/r_{r}_n_{n}_corners_{corners}_reps_{reps}.npy', nonten_results)
+    nonten_results = np.zeros((reps, 8)) 
+    #np.save(f'experiments/record/r_{r}_n_{n}_corners_{corners}_reps_{reps}.npy', nonten_results)
     amcomp_results = np.zeros((reps, 2)) 
     silrtc_results = np.zeros((reps, 2)) 
     tncomp_results = np.zeros((reps, 2)) 
@@ -75,7 +75,7 @@ for i in range(len(R)):
         print("")
         print("Running BCG...")
         last_time = time.time()
-        psi_n, iter_count, sigd_count, ip_count, as_size, as_drops = nonten(X, Y, r, rng, tol=1e-4)
+        psi_n, iter_count, sigd_count, ip_count, as_size, as_drops,altmax_time = nonten(X, Y, r, rng, tol=1e-4)
         curr_time = time.time()
         elapsed_time = curr_time - last_time
         nonten_results[rep, 0] = np.dot(phi-psi_n,phi-psi_n)/np.dot(phi,phi)
@@ -85,6 +85,8 @@ for i in range(len(R)):
         nonten_results[rep, 4] = ip_count
         nonten_results[rep, 5] = as_size
         nonten_results[rep, 6] = as_drops
+        nonten_results[rep, 7] = altmax_time
+
         
         print("")
         print("Running ALS...")
@@ -124,10 +126,10 @@ for i in range(len(R)):
         print("Experiment Results: ")
         print("")
 
-        np.save(f'experiments/record/r_{r}_n_{n}_corners_{corners}_reps_{reps}.npy', nonten_results)
+        #np.save(f'experiments/record/r_{r}_n_{n}_corners_{corners}_reps_{reps}.npy', nonten_results)
 
         print(f"BCG:")
-        print("Mean (NMSE, Time, iter_count, sigd_count, ip_count, as_size, as_drops)")
+        print("Mean (NMSE, Time, iter_count, sigd_count, ip_count, as_size, as_drops, altmax_time)")
         print(np.mean(nonten_results,0))
         print("")
 
