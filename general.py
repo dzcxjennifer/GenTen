@@ -551,7 +551,7 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
     sol = lpar*psi_q
     if wideX:
         X = Xo
-    return (sol, iter_count, sigd_count, ip_count, as_size, as_drops, sum(alt_times))
+    return (sol, iter_count, sigd_count, ip_count, as_size, as_drops, max(sum(alt_times),0))
 
 def predict(psi_q, X, r):
 

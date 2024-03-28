@@ -14,7 +14,7 @@ from pyten.tools import tenerror
 ##################################################################
 # EDIT THESE TO CHANGE PROBLEM SETUP
 # Problem parameters
-R = [(10,10,10)]
+R = [(1,1,1)]
 N = [500]
 Corners = [10]
 Reps = [1]

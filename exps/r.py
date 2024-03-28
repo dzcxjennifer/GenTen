@@ -132,7 +132,7 @@ def run_exp(R,N,Corners,Reps):
     #             np.mean(tncomp_results,0)]
     
 # r
-Reps = [100] #same as neurips paper
+Reps = [10] #same as neurips paper
 Corners = [10] 
 
 results = np.zeros((10, 11)) 

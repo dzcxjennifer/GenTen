@@ -85,7 +85,6 @@ class TNCP(object):
         self.X_pre = self.X.copy()
 
     def run(self):
-        print('hiiiiii',[self.rank for i in range(self.ndims)])
         self.errList = []
         
         self.initializeLatentMatrices()

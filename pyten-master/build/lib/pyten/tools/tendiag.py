@@ -15,10 +15,7 @@ def tendiag(v, sz):
     v = v.reshape((n, 1))
     x = np.zeros(sz)
     subs = np.matlib.repmat(np.array(range(n)).reshape(n, 1), 1, len(sz))
-    print('v',v)
-    print('x',x)
-    print('n',n)
-    print('subs',subs)
+    print(np.shape(subs))
     for i in range(n):
         x[subs[i][0], subs[i][1], subs[i][2]] = v[i]
 
