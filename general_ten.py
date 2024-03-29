@@ -260,7 +260,6 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
     var[:num_psi+rho].setAttr('VType', 'c')
     var[:num_psi+rho].setAttr('UB', 1)
     var[:num_psi+rho].setAttr('LB', -1)
-    print('vars_set')
     data,row_ind,col_ind = np.zeros(3*4*num_psi),np.zeros(3*4*num_psi) ,np.zeros(3*4*num_psi)   
     
     for k in range(p-1): 
@@ -274,14 +273,12 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                 d[ind_k_plus_1] = psi_count
                 psi_count += 1
             psi_k_plus_1= d[ind_k_plus_1]
-            # print('ind_k',ind_k,psi_k,'ind_k_plus_1',ind_k_plus_1,psi_k_plus_1)
             data[3*cstr:3*cstr+12]=[-1,-1,-1,-1,1,1,1,1,-1,1,-1,1]
             for i in range(4):
                 row_ind[3*cstr:3*cstr+3]=[cstr,cstr,cstr]
                 col_ind[3*cstr:3*cstr+3]=[psi_k, psi_k_plus_1,num_psi+ cum_r[k] + ind_k[0]]
                 cstr += 1
         d_k=d
-    print('first set ready')
     A = sp.csr_matrix((data[:cstr*3], (row_ind[:cstr*3], col_ind[:cstr*3]))
                       , shape=(cstr, num_psi + 2*rho))
     b = np.ones(cstr) 
@@ -294,12 +291,10 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
         psi_p = d_k[ind_p]
         col_ind[2*cstr2:2*cstr2+2]=[psi_p,num_psi+ cum_r[p-1] + ind_p[0]]
         cstr2 += 1
-    print('2nd set ready')
     A = sp.csr_matrix((data, (row_ind, col_ind))
                       , shape=(cstr2,num_psi + 2*rho))
     b = np.zeros(cstr2) 
     m.addConstr(A @ var == b)
-    print('2nd set setup')
     data = np.zeros(2*rho) 
     row_ind = np.zeros(2*rho)
     col_ind = np.zeros(2*rho)
@@ -307,11 +302,9 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
         data[2*i:2*i+2]=[1,-2] #the_x_k, v_x_k
         row_ind[2*i:2*i+2] = [i,i]
         col_ind[2*i:2*i+2] = [num_psi + i,num_psi + rho + i ]
-    print('3rd set ready')
     A = sp.csr_matrix((data, (row_ind, col_ind)), shape=(rho, num_psi + 2*rho))
     b = np.zeros(rho) - 1
     m.addConstr(A @ var == b)
-    print('3rd set setup')
     m.update()
 
     # m.write('nonten.lp')
@@ -433,6 +426,7 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                 altmin_count = 0
                 out_count = 0
                 best_cmin = float('inf')
+                last_cmin = float('inf')
                 while (oflg and out_count < 1000):
                     ### Heuristic: Alternating Minimization ###
                     alt_start = time.process_time()
@@ -446,6 +440,8 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                         the_n = the.X
                     elif (altmin_count == 2) & (out_count == 0):
                         the_n = -1* the.X
+                    elif last_cmin < best_cmin:
+                        the_n = the_b
                     else:
                         the_n = np.round(rng.uniform(size=np.sum(r)))
                         the_n = 2*1.0*(the_n < 0.5) -1
@@ -459,7 +455,6 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                         best_cmin = last_cmin
                         psi_b = psi_n
                         the_b = the_n                        
-                    #print(best_cmin)
                     # improve the gap estimate when certain conditions hold
                     if oflg and m._cmin - best_cmin > (objVal - bestbd)/2:
                         m._gap = (objVal - bestbd)/2
@@ -490,9 +485,6 @@ def nonten(X, Y, r, rng, lpar = 1, tol = 1e-6, verbose = True):
                 
                     # for c in m.getConstrs():
                     #     print(f'\t{c.constrname}: {m.getRow(c)} {c.Sense} {c.RHS}')
-
-                    
-                    
                     # print('entries that are not -1 or 1',len(psi_n[(psi_n!=1) & (psi_n!=-1)]))
                     # print('entries that are not -1 or 1',len(the_n[(the_n!=1) & (the_n!=-1)]))
                     

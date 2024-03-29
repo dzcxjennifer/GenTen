@@ -80,23 +80,42 @@ def run_exp(R,N,Corners,Reps):
             
         return np.mean(nonten_results[:,0]),np.std(nonten_results[:,0])/np.sqrt(reps),np.mean(nonten_results[:,1]),np.std(nonten_results[:,1])/np.sqrt(reps), np.mean(nonten_results[:,7]),np.std(nonten_results[:,7])/np.sqrt(reps)
     
-results = np.zeros((5, 7)) 
-Corners = [10] 
-#for r_ in range(1,11):
-for r_ in [1,2,4,6,8]:
-    if r_ == 4:
-        Reps = [2]
-    else: Reps = [5]
-    r = r_*10
-    R = [(r,r,r)]
-    N = [1000]
+# results = np.zeros((5, 7)) 
+# Corners = [10] 
+# #for r_ in range(1,11):
+# for r_ in [1,2,3,6,8,4]:
+#     if r_ == 4:
+#         Reps = [1]
+#     else: Reps = [2]
+#     r = r_*10
+#     R = [(r,r,r,r,r)]
+#     N = [1000]
     
-    res=run_exp(R,N,Corners,Reps)
-    results[r_-1,0]=r
-    results[r_-1,1] = res[0]
-    results[r_-1,2] = res[1]
-    results[r_-1,3] = res[2]
-    results[r_-1,4] = res[3]
-    results[r_-1,5] = res[4]
-    results[r_-1,6] = res[5]
+#     res=run_exp(R,N,Corners,Reps)
+#     results[r_-1,0]=r
+#     results[r_-1,1] = res[0]
+#     results[r_-1,2] = res[1]
+#     results[r_-1,3] = res[2]
+#     results[r_-1,4] = res[3]
+#     results[r_-1,5] = res[4]
+#     results[r_-1,6] = res[5]
+#     print(results)
+
+
+Reps = [2] #same as neurips paper
+Corners = [10] 
+N = [10000]
+results = np.zeros((3, 7)) 
+for p in (range(4,7)): #(4,9)
+    R = [tuple(10  for _ in range(p))]
+    res = run_exp(R,N,Corners,Reps)
+
+    results[p-4,0]=p
+    results[p-4,1] = res[0]
+    results[p-4,2] = res[1]
+    results[p-4,3] = res[2]
+    results[p-4,4] = res[3]
+    results[p-4,5] = res[4]
+    results[p-4,6] = res[5]
+  
     print(results)
